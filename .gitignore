@@ -8,7 +8,12 @@
 !detecciones/
 !evaluaciones/
 !fonts/
+!server.py
 !.gitignore
+!.dockerignore
+!Dockerfile
+!static/
+!index.html
 
 # Ignorar el contenido dentro de las carpetas, pero no las carpetas en sí
 detecciones/*
