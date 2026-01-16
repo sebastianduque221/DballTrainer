@@ -16,38 +16,40 @@ def procesar_frame(frame, pose, deteccion_func):
     image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     image.flags.writeable = False  # Hacer la imagen no escribible para mejorar el rendimiento
 
-    # Procesar la imagen y obtener los puntos de referencia
     results = pose.process(image)
 
-    # Hacer la imagen escribible nuevamente
     image.flags.writeable = True
     image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-    # Dibujar los puntos de referencia
+    # Inicializar valores por defecto
+    angulo_codo = 0
+    angulo_rodilla = 0
+    angulo_tronco = 0
+    manos_sobre_frente = False
+    evaluacion = ""
+
     if results.pose_landmarks:
-        mp_drawing.draw_landmarks(image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+        mp.solutions.drawing_utils.draw_landmarks(
+            image, results.pose_landmarks, mp.solutions.pose.POSE_CONNECTIONS
+        )
 
-        # Evaluar la detección
-        angulo_codo, angulo_rodilla, angulo_tronco, manos_sobre_frente, evaluacion = deteccion_func(results.pose_landmarks.landmark)
+        angulo_codo, angulo_rodilla, angulo_tronco, manos_sobre_frente, evaluacion = \
+            deteccion_func(results.pose_landmarks.landmark)
 
-        # Convertir el frame de OpenCV a PIL para dibujar texto
+        # Convertir a PIL para dibujar texto
         pil_image = Image.fromarray(image)
         draw = ImageDraw.Draw(pil_image)
 
-        # Cargar la fuente personalizada
         try:
             font = ImageFont.truetype(r'fonts/static/OpenSans_Condensed-Italic.ttf', 24)
         except IOError:
-            print("No se pudo cargar la fuente, usando fuente predeterminada.")
             font = ImageFont.load_default()
 
-        # Dibujar la evaluación en la imagen
         y0, dy = 30, 30
         for i, line in enumerate(evaluacion.split('\n')):
             y = y0 + i * dy
             draw.text((10, y), line, font=font, fill=(255, 0, 0))
 
-        # Convertir de vuelta a OpenCV
         image = np.array(pil_image)
 
     return image, results, angulo_codo, angulo_rodilla, angulo_tronco, manos_sobre_frente
