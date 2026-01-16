@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="UTF-8">
+		<title>Video Analyzer</title>
+	</head>
+
+	<body>
+
+		<h1 for="upload">Sube un vídeo</h1>
+
+		<input name="upload" type="file" id="videoInput" placeholder="Sube un video">
+
+		<label for="posicion">Selecciona una posición</label>
+		<select name="posicion" id="posicion">
+			<option value="saque">Saque</option>
+			<option value="colocador">Colocador</option>
+		</select>
+		
+		<button onclick="uploadVideo()">Analizar</button>
+		
+		<div id="result"></div>
+
+		<script>
+			async function uploadVideo() {
+				const input = document.getElementById("videoInput")
+				const posicion = document.getElementById("posicion")
+
+				if (!input.files.length) return alert("Selecciona un vídeo")
+
+				const formData = new FormData()
+				formData.append("video", input.files[0])
+				formData.append("posicion", posicion.text)
+
+				const response = await fetch("/analyze", {
+					method: "POST",
+					body: formData
+				})
+
+				if (!response.ok) return alert("Error procesando vídeo")
+
+				const csvText = await response.text()
+				const rows = csvText.split("\n").map(r => r.split(","))
+				let html = "<table border='1'>"
+				for (let row of rows) {
+					html += "<tr>" + row.map(cell => `<td>${cell}</td>`).join("") + "</tr>"
+				}
+			
+				html += "</table>"
+				html += `<br><a href="data:text/csv;charset=utf-8,${encodeURIComponent(csvText)}" download="results.csv">Descargar CSV</a>`
+				
+				document.getElementById("result").innerHTML = html
+			}
+		</script>
+	</body>
+</html>
