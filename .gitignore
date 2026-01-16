@@ -7,11 +7,14 @@
 !README.md
 !detecciones/
 !evaluaciones/
+!Estadistica/
 !fonts/
 !server.py
 !.gitignore
+!videos/
 !.dockerignore
 !Dockerfile
+!utils/
 !static/
 !index.html
 
@@ -24,3 +27,5 @@ fonts/*
 !detecciones/**
 !evaluaciones/**
 !fonts/**
+!Estadistica/**
+!utils/**

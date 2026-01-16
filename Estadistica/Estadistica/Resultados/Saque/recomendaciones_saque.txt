@@ -1,0 +1,6 @@
+- Ángulo de codo promedio: 153.66° (Rango típico: 150-180° - adecuado).
+- Altura promedio del brazo: 0.28 cm (Relativa: >= 50 cm - a revisar).
+- Alineación promedio del hombro: 1.00°.
+- Alineación promedio del codo: 1.00°.
+- Porcentaje de contactos correctos con el balón: 0.00%.
+- Porcentaje de saques válidos: 0.00%.
